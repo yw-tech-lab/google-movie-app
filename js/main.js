@@ -1,7 +1,8 @@
-import './style.css';
+import '../style.css';
+import key from './key.js';
+import StateManager from './state-manager.js';
 import SearchForm from './search-form.js';
+import Movie from './movie.js';
 
-document.querySelector('#app').innerHTML = `
-  <h1>Hello Vite!</h1>
-  <a href="https://vitejs.dev/guide/features.html" target="_blank">Documentation</a>
-`
+const searchForm = new SearchForm();
+searchForm.drawForm();

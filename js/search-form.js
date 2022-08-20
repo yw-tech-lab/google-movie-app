@@ -35,11 +35,14 @@ export default class SearchForm {
                 </div>
             </form>
         `;
+        document.querySelector('.form-container').innerHTML = formTemplate;
+        document.querySelector('form').addEventListener('submit', this.search);
     }
 
-    search() {
+    search () {
         // the job of this method is to send the 
         // search to the cloud (OMDB)
+        console.log('Search!');
 
     }
 
