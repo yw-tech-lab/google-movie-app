@@ -9,10 +9,9 @@ body {
   /* text-align: center; */
   color: #2c3e50;
   margin-top: 60px;
-  margin-left: 15vw;
-  margin-right: 15vw;
   display: block;
   background: #F4F4F4;
+  overflow-y: scroll;
 }
 
 header {
@@ -52,12 +51,16 @@ textarea {
     font-size: 1.0em;
 } 
 textarea {
-    min-height: 100px;
+    min-height: 150px;
+    width: 100%;
 }
 button {
-    margin-left: 205px;
     padding: 10px;
     font-size: 1.0em;
+}
+
+button.btn-movie-search {
+    margin-left: 205px;
 }
 
 header h1 {
@@ -69,7 +72,7 @@ main {
     margin-right: 15vw;
 }
 
-.comments, form {
+form {
     padding: 20px;
     background: #fff;
     border-radius: 5px;
@@ -77,33 +80,16 @@ main {
     /* box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); */
 }
 
-.comment {
-    margin-bottom: 40px;
-    /* border-bottom: solid 1px #ccc; */
-}
-
-.user-info {
-  display: flex;
-  font-weight: bold;
-}
-
-.avatar {
-  border-radius: 50%;
-  width: 50px;
-  margin-right: 10px;
-}
-
-.user-info p {
-  margin: 0;
-}
-
-.comment-text {
-  margin: 0;
-  margin-left: 60px;
-  display: inline-block;
-}
-
 .movie {
     display: grid;
     grid-template-columns: 150px auto;
+    column-gap: 50px;
+    margin-bottom: 50px;
+}
+.movie img {
+    width: 100%;
+}
+
+#edit {
+    float: right;
 }

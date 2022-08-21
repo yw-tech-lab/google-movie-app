@@ -12,12 +12,14 @@ export default class StateManager {
         // This is our state. When anything changes
         // with any of these variables, we need to 
         // notify our components:
-        this.movies = [];
+        this.movies;
         this.searchResults = [];
         this.favorites = [];
         this.subscribers = []; // so that components can listen for changes to the state
-        this.searchMode = true;
-        this.showNotes = true;
+        this.searchMode = false;
+        this.showNotes = false;
+
+        this.loadFavorites();
     }
 
     // A method to read a user's favorites from 
@@ -26,6 +28,18 @@ export default class StateManager {
         // reads from IndexedDB and stores the 
         // data to this.favorites and notifies
         // any interested components.
+        this.favorites = [];
+        this.movies = this.favorites;
+        this.notify('favorites-loaded', this.movies);
+    }
+
+    toggleMode() {
+        if (this.showNotes) {
+            this.showNotes = false;
+        } else {
+            this.showNotes = true;
+        }
+        this.notify('notes-toggled', this.movies);
     }
     
     // A method to add a new movie to the user's 
@@ -33,6 +47,19 @@ export default class StateManager {
     saveMovieToFavorites(movieData) {
         // appends the new movie to this.favorites and
         // stores it in the DB.
+    }
+
+    saveMovieToSearchResults(movie) {
+        this.searchMode = true;
+        this.movies = this.searchResults; 
+        this.movies.push(movie);
+        this.notify('movie-added', this.movies);
+    }
+
+    reset() {
+        this.searchMode = false;
+        this.movies = this.favorites;  
+        this.notify('mode-switched', this.movies);
     }
     
     

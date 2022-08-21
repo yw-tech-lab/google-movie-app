@@ -1,8 +1,9 @@
 import '../style.css';
-import key from './key.js';
 import StateManager from './state-manager.js';
 import SearchForm from './search-form.js';
-import Movie from './movie.js';
+import MovieList from './movie-list.js'
 
-const searchForm = new SearchForm();
+const stateManager = new StateManager();
+const searchForm = new SearchForm(stateManager);
+const movieList = new MovieList(stateManager)
 searchForm.drawForm();

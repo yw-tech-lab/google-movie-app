@@ -1,6 +1,9 @@
-export default class SearchForm {
-    constructor() {
+import key from './key.js';
+import Movie from './movie.js';
 
+export default class SearchForm {
+    constructor(stateManager) {
+        this.stateManager = stateManager;
     }
 
     drawForm () {
@@ -10,7 +13,10 @@ export default class SearchForm {
                 <h2>Movie Search</h2>
                 <div class="row">
                     <label for="title">Title:</label>
-                    <input type="text" id="title" placeholder="Title of the movie" required />
+                    <input type="text" id="title" 
+                        placeholder="Title of the movie" 
+                        value="Rush Hour"
+                        required />
                 </div>
                 <div class="row">
                     <label for="year">Year (optional):</label>
@@ -31,23 +37,38 @@ export default class SearchForm {
                 </div>
             
                 <div class="row">
-                    <button type="submit">Search</button>
+                    <button type="submit" class="btn-movie-search">Search</button>
+                    <button id="reset">Reset</button>
                 </div>
             </form>
         `;
         document.querySelector('.form-container').innerHTML = formTemplate;
-        document.querySelector('form').addEventListener('submit', this.search);
+        document.querySelector('form').addEventListener('submit', this.search.bind(this));
+        document.querySelector('#reset').addEventListener('click', this.reset.bind(this));
     }
 
-    search () {
+    search (ev) {
         // the job of this method is to send the 
         // search to the cloud (OMDB)
-        console.log('Search!');
-
+        ev.preventDefault();
+        const title = document.querySelector('#title').value;
+        const plot = document.querySelector('#plot').value;
+        const year = document.querySelector('#year').value;
+        let url = `http://www.omdbapi.com/?apikey=${key}&t=${title}&plot=${plot}`;
+        if (year != '') {
+            url += `y=${year}`;
+        }
+        console.log(url);
+        fetch(url)
+            .then(response => response.json())
+            .then((data => {
+                this.stateManager.saveMovieToSearchResults(data);
+            }).bind(this));
     }
 
-    displayResults() {
-        // the job of this method is to display the movie
-        // once the response comes back from the cloud
+    reset(ev) {
+        ev.preventDefault();
+        console.log('reset');
+        this.stateManager.reset();
     }
 }
