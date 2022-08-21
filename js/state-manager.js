@@ -18,20 +18,21 @@ export default class StateManager {
         this.subscribers = []; // so that components can listen for changes to the state
         this.searchMode = false;
         this.showNotes = false;
-
-        this.loadFavorites();
+        
+        this.subscribe('database-loaded', this.loadFavorites.bind(this));
+        this.loadDatabase();
     }
 
     // A method to read a user's favorites from 
     // IndexedDB when the page first loads.
-    loadFavorites() {
-        // reads from IndexedDB and stores the 
-        // data to this.favorites and notifies
-        // any interested components.
-        this.favorites = [];
-        this.movies = this.favorites;
-        this.notify('favorites-loaded', this.movies);
-    }
+    // loadFavorites() {
+    //     // reads from IndexedDB and stores the 
+    //     // data to this.favorites and notifies
+    //     // any interested components.
+    //     this.favorites = [];
+    //     this.movies = this.favorites;
+    //     this.notify('favorites-loaded', this.movies);
+    // }
 
     toggleMode() {
         if (this.showNotes) {
@@ -88,6 +89,81 @@ export default class StateManager {
         // they need to tell the SM which event they're interested in,
         // and what should happen if that event is fired (callback Function).
         this.subscribers.push([eventName, callbackFunction]);
+    }
+
+    saveMovie(movie) {
+        // "push" method of an array appends an item to the bottom
+        var openRequest = indexedDB.open("movie-database", 1);
+        openRequest.onsuccess = function (e) {
+            console.log("running onsuccess");
+            let db = e.target.result;
+            // call this function to create a new comment:
+
+            var transaction = db.transaction(["movies"], "readwrite");
+            var comments = transaction.objectStore("movies");
+            var request = comments.add(movie);
+
+            request.onerror = function (e) {
+                console.log("Error", e.target.error.name);
+            };
+            request.onsuccess = function (e) {
+                console.log("The comment has been successfully added!");
+                this.movies = this.favorites;
+                this.movies.push(movie);
+                this.notify('movie-added', this.movies);
+            }.bind(this);
+
+            // Commit: close connection
+            transaction.oncomplete = () => {
+                db.close();
+            };
+        }.bind(this);
+    }
+
+    loadDatabase() {
+        // let db;
+
+        var openRequest = indexedDB.open("movie-database", 1);
+
+        // 1. This function created our new data store:
+        openRequest.onupgradeneeded = function (e) {
+            let db = e.target.result;
+            console.log("running onupgradeneeded");
+
+            // create new data stores:
+            if (!db.objectStoreNames.contains("movies")) {
+                db.createObjectStore("movies", {
+                    keyPath: "imdbID"
+                });
+            }
+        }.bind(this);
+
+        // 2. This function fires when the database has been opened.
+        // This is where we will add new comments to the datastore:
+        openRequest.onsuccess = function (e) {
+            let db = e.target.result;
+            // this.readCommentsFromDataStore(db);
+            this.notify('database-loaded', db);
+        }.bind(this);
+    }
+
+    loadFavorites(db) {
+        var transaction = db.transaction("movies", "readonly");
+        var objectStore = transaction.objectStore("movies");
+        var cursorRequest = objectStore.openCursor();
+        var movieList = [];
+        cursorRequest.onsuccess = (function (event) {
+            if (event.target.result) {
+                movieList.push(event.target.result.value);
+                event.target.result["continue"]();
+            }
+        }).bind(this);
+
+        transaction.oncomplete = function (event) {
+            this.favorites = movieList;
+            this.searchMode = false;
+            this.notify('favorites-loaded', movieList);
+        }.bind(this);
     }
 
 }

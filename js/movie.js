@@ -11,7 +11,7 @@ export default class Movie {
             <div class="movie">
                 <div>
                     <img src="${data.Poster}">
-                    <button class="like">Like</button>
+                    <button class="like" id="like_${this.data.imdbID}">Like</button>
                 </div>
                 <div class="info">                
                     <h2>${data.Title}</h2>
@@ -22,6 +22,21 @@ export default class Movie {
             </div>
         `;
         return movieTemplate;
+    }
+
+    attachLikeFunctionality() {
+        console.log(`#like_${this.data.imdbID}`);
+        document.querySelector(`#like_${this.data.imdbID}`).addEventListener('click', () => {
+            console.log('Like', this.data);
+            this.stateManager.saveMovie(this.data);
+        });
+        // document.querySelector(`#like_${this.data.imdbID}`).addEventListener('click', () => {alert('hi')});
+    }
+
+    like(ev) {
+        // ev.preventDefault();
+        console.log('Like', this.data);
+        // this.stateManager.saveMovie(this.data);
     }
 
     getNotes(data) {

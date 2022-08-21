@@ -18,6 +18,7 @@ export default class MovieList {
             const movieData = movieDataList[i];
             const movie = new Movie(this.stateManager, movieData);
             moviesContainer.insertAdjacentHTML('beforeend', movie.toHTML());
+            movie.attachLikeFunctionality();
         }
         document.querySelector("#edit").addEventListener('click', this.toggle.bind(this));
     }
