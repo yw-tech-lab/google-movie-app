@@ -64,6 +64,7 @@ export default class Movie {
                 <button class="save" id="save_${this.data.imdbID}">Save</button>
             `;
         } else {
+            // return `<p>${data.notes || ''}</p>`;
             return ``;
         };
     }
