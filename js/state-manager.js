@@ -4,7 +4,7 @@ The state manager's job is to:
     (b) notify components when critical changes have happened, and 
     (c) allow components to notify it that data has changed.
 */
-import Database from './datastore.js'
+import Database from './database.js'
 
 export default class StateManager {
 
@@ -28,11 +28,12 @@ export default class StateManager {
     }
 
     toggleMode() {
-        if (this.showNotes) {
-            this.showNotes = false;
-        } else {
-            this.showNotes = true;
-        }
+        // if (this.showNotes) {
+        //     this.showNotes = false;
+        // } else {
+        //     this.showNotes = true;
+        // }
+        this.showNotes = !this.showNotes;
         this.notify('notes-toggled', this.movies);
     }
     

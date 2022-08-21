@@ -2,8 +2,7 @@
 
 export default class Database {
 
-    constructor (stateManager) {
-        this.stateManager   = stateManager;
+    constructor () {
         this.indexedDB		= window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 	    this.baseName 	    = "movie-database";
 	    this.storeName 	    = "movies";
@@ -65,17 +64,13 @@ export default class Database {
             const objectStore = transaction.objectStore(this.storeName);
             
             // the "put" method adds or updates
-            console.log('updating object in data store:', JSON.stringify(obj))
             const request = objectStore.put(obj);
             request.onerror = function (e) {
                 console.log("Error", e.target.error.name);
             };
             request.onsuccess = (function(e){
                 console.log("Rows has been added / updated");
-                console.log(e);
-                console.info(request.result);
                 this.getAll(callback);
-                // callback(obj);
             }).bind(this);
         }).bind(this));
     }
@@ -98,8 +93,8 @@ export default class Database {
     get(id, callback){
         this.connectDB((function(db){
             var transaction = db.transaction([this.storeName], "readonly").objectStore(this.storeName).get(id);
-            transaction.onerror = function(e){
-                console.error(e)
+            transaction.onerror = function(err){
+                console.error(err);
             }
             transaction.onsuccess = function(){
                 callback(transaction.result ? transaction.result : -1);

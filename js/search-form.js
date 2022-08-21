@@ -1,5 +1,4 @@
 import key from './key.js';
-import Movie from './movie.js';
 
 export default class SearchForm {
     constructor(stateManager) {
