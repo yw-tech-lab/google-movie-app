@@ -47,6 +47,12 @@ export default class Database {
                         cursor.continue();
                     }
                     else {
+                        // sort in order of most recently updated:
+                        rows.sort(function(a, b) {
+                            if (a.timestamp < b.timestamp) return 1;
+                            if (a.timestamp > b.timestamp) return -1;
+                            return 0;
+                          });
                         callback(rows);
                     }
                 };
@@ -101,33 +107,3 @@ export default class Database {
         }).bind(this));
     }
 }
-
-//https://habr.com/post/213515/
-
-// This works on all devices/browsers, and uses IndexedDBShim as a final fallback 
-
-
-// function up(obj){//obj with id
-// 	del(obj.id,'up');
-// 	add(obj,'up');
-// }
-
-
-// //add data
-// add({word:'one',data:100});
-// add({word:'two',data:200});
-// add({word:'three',data:300});
-// add({word:'seven',data:700});
-
-// //edit data
-// up({word:'five',data:500,id:1});
-
-// //delete
-// del(3);
-
-// //get data
-// func=function(result){
-// 	console.log(result);
-// };
-// get(1,func);
-// getAll(func);

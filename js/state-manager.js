@@ -19,10 +19,7 @@ export default class StateManager {
         this.favorites = [];
         this.subscribers = []; // so that components can listen for changes to the state
         this.searchMode = false;
-        this.showNotes = false;
-        
-        // this.subscribe('database-loaded', this.loadFavorites.bind(this));
-        
+        this.showNotes = false;        
         this.loadFavoritesFromDB();
     }
 
@@ -42,7 +39,11 @@ export default class StateManager {
     saveMovieToFavorites(movie) {
         // appends the new movie to this.favorites and
         // stores it in the DB.
-        movie.timestamp = new Date();
+        if (!movie.timestamp) {
+            movie.timestamp = new Date();
+        } else {
+            movie.lastUpdated = new Date();
+        }
         this.database.addOrUpdate(movie, this.refreshFavorites.bind(this));
     }
 
