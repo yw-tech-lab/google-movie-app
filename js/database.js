@@ -4,7 +4,7 @@ export default class Database {
 
     constructor () {
         this.indexedDB		= window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
-	    this.baseName 	    = "movie-database";
+	    this.baseName 	    = "movie-database-sarah";
 	    this.storeName 	    = "movies";
     }
 

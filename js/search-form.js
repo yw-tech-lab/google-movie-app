@@ -1,6 +1,9 @@
-export default class SearchForm {
-    constructor() {
+import apiKey from './key.js';
 
+export default class SearchForm {
+    
+    constructor(stateManager) {
+        this.stateManager = stateManager;
     }
 
     drawForm () {
@@ -36,7 +39,7 @@ export default class SearchForm {
             </form>
         `;
         document.querySelector('.form-container').innerHTML = formTemplate;
-        document.querySelector('form').addEventListener('submit', this.search);
+        document.querySelector('form').addEventListener('submit', this.search.bind(this));
     }
 
     search (ev) {
@@ -44,6 +47,21 @@ export default class SearchForm {
         // search to the cloud (OMDB)
         ev.preventDefault();
         console.log('Search!');
+        ev.preventDefault();
+        const title = document.querySelector('#title').value;
+        const plot = document.querySelector('#plot').value;
+        const year = document.querySelector('#year').value;
+        let url = `http://www.omdbapi.com/?apikey=${apiKey}&t=${title}&plot=${plot}`;
+        if (year != '') {
+            url += `y=${year}`;
+        }
+        console.log(url);
+        fetch(url)
+            .then(response => response.json())
+            .then((data => {
+                console.log(data);
+                this.stateManager.notify('movie-found', [data]);
+            }).bind(this));
 
     }
 

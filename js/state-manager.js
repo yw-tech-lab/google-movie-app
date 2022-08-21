@@ -5,6 +5,8 @@ The state manager's job is to:
     (c) allow components to notify it that data has changed.
 */
 
+import Database from './database.js';
+
 export default class StateManager {
 
     constructor() {
@@ -18,6 +20,11 @@ export default class StateManager {
         this.subscribers = []; // so that components can listen for changes to the state
         this.searchMode = true;
         this.showNotes = true;
+        this.database = new Database();
+
+        // listening so that any time a "like-requested" event happens, it
+        // will call the "saveMovieToFavorites" method.
+        this.subscribe('like-requested', this.saveMovieToFavorites.bind(this));
     }
 
     // A method to read a user's favorites from 
@@ -33,6 +40,11 @@ export default class StateManager {
     saveMovieToFavorites(movieData) {
         // appends the new movie to this.favorites and
         // stores it in the DB.
+        console.log("I am about to save the movie to the DB!");
+        console.log(movieData);
+        this.database.addOrUpdate(movieData, function () {
+            console.log('Successfully added to the database');
+        });
     }
     
     
