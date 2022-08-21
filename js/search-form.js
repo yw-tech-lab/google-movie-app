@@ -63,13 +63,18 @@ export default class SearchForm {
             .then(response => response.json())
             .then((data => {
                 console.log(data);
-                this.stateManager.saveMovieToSearchResults(data);
+                if (data.Error) {
+                    this.stateManager.notify('movie-not-found', data.Error);
+                } else {
+                    this.stateManager.saveMovieToSearchResults(data);
+                }
             }).bind(this));
     }
 
     reset(ev) {
         ev.preventDefault();
-        console.log('reset');
+        document.querySelector('#title').value = '';
+        document.querySelector('#year').value = '';
         this.stateManager.reset();
     }
 }
