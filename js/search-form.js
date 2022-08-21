@@ -39,9 +39,10 @@ export default class SearchForm {
         document.querySelector('form').addEventListener('submit', this.search);
     }
 
-    search () {
+    search (ev) {
         // the job of this method is to send the 
         // search to the cloud (OMDB)
+        ev.preventDefault();
         console.log('Search!');
 
     }
