@@ -34,12 +34,16 @@ export default class SearchForm {
                 </div>
             
                 <div class="row">
-                    <button type="submit">Search</button>
+                    <button type="submit" class="pinkify">Search</button>
+                    <button id="reset" class="pinkify">Reset</button>
+                    <button id="show-favorites" class="pinkify">Show Favorites</button>
                 </div>
             </form>
         `;
         document.querySelector('.form-container').innerHTML = formTemplate;
         document.querySelector('form').addEventListener('submit', this.search.bind(this));
+        document.querySelector('#reset').addEventListener('click', this.clearScreen.bind(this));
+        document.querySelector('#show-favorites').addEventListener('click', this.loadFavorites.bind(this));
     }
 
     search (ev) {
@@ -47,7 +51,6 @@ export default class SearchForm {
         // search to the cloud (OMDB)
         ev.preventDefault();
         console.log('Search!');
-        ev.preventDefault();
         const title = document.querySelector('#title').value;
         const plot = document.querySelector('#plot').value;
         const year = document.querySelector('#year').value;
@@ -65,8 +68,15 @@ export default class SearchForm {
 
     }
 
-    displayResults() {
-        // the job of this method is to display the movie
-        // once the response comes back from the cloud
+    clearScreen(ev) {
+        ev.preventDefault();
+        document.querySelector("#title").value = "";
+        document.querySelector("#year").value = "";
+        this.stateManager.notify('clear-everything');
+    }
+
+    loadFavorites(ev) {
+        ev.preventDefault();
+        this.stateManager.loadFavorites();
     }
 }

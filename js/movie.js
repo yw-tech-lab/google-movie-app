@@ -10,25 +10,41 @@ export default class Movie {
         const html = this.toHTML(this.movieData);
         parentElement.insertAdjacentHTML('beforeend', html);
 
-        // attach an event handler to the .like button:
-        const likeButtonSelector = `#like_${this.movieData.imdbID}`;
-        document.querySelector(likeButtonSelector).addEventListener('click', this.like.bind(this));
+         // attach an event handler to the .like button:
+         const likeButtonSelector = `#like_${this.movieData.imdbID}`;
+         document.querySelector(likeButtonSelector).addEventListener('click', this.like.bind(this));
     }
 
     toHTML(data) {
         // returns an HTML representation of the JSON data
         const movieTemplate = `
-            <div class="movie">
+            <div id="movie_${this.movieData.imdbID}" class="movie">
                 <img src="${data.Poster}">
                 <div>
                     <h2>${data.Title}</h2>
                     <p>${data.Year}</p>
                     <p>${data.Plot}</p>
-                    <button class="like" id="like_${data.imdbID}">Like</button>
+                    <div>
+                        <button class="like" id="like_${data.imdbID}">Like</button>
+                    </div>
+                    ${ this.getNotesForm() }
                 </div>
             </div>
         `;
         return movieTemplate;
+    }
+
+    getNotesForm() {
+        if(this.stateManager.showNotes) {
+            return `
+                <div>
+                    <label>Notes</label>
+                    <textarea>${this.movieData.notes || ''}</textarea>
+                </div>
+            `;
+        } else {
+            return '';
+        }
     }
 
     like (ev) {

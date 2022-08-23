@@ -33,7 +33,7 @@ header {
 .row {
     padding: 5px 0;
 }
-label { 
+form label { 
     width: 200px;
     text-align: right;
     padding-right: 10px;
@@ -51,10 +51,14 @@ textarea {
     padding: 10px;
     font-size: 1.0em;
 } 
+.pinkify {
+    background: pink;
+}
+
 textarea {
     min-height: 100px;
 }
-form button {
+form button:first-child {
     margin-left: 205px;
 }
 
@@ -85,8 +89,18 @@ form {
     display: grid;
     grid-template-columns: 150px auto;
     column-gap: 50px;
+    margin-bottom: 40px;
 }
 
 .movie img {
     width: 100%;
+}
+
+textarea {
+    width: 100%;
+    min-height: 120px;
+}
+
+#show_notes{
+    float: right;
 }
