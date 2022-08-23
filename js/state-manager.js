@@ -29,6 +29,7 @@ export default class StateManager {
         this.subscribe('movie-found', this.setSearchResults.bind(this));
         this.subscribe('favorites-loaded', this.setFavorites.bind(this));
         this.subscribe('show-notes', this.toggleNotes.bind(this));
+        this.subscribe('save-requested', this.saveMovieToFavorites.bind(this));
     }
 
     setSearchResults(movieDataList) {

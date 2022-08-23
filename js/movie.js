@@ -10,9 +10,17 @@ export default class Movie {
         const html = this.toHTML(this.movieData);
         parentElement.insertAdjacentHTML('beforeend', html);
 
-         // attach an event handler to the .like button:
-         const likeButtonSelector = `#like_${this.movieData.imdbID}`;
-         document.querySelector(likeButtonSelector).addEventListener('click', this.like.bind(this));
+        // attach an event handler to the like button:
+        const likeButtonSelector = `#like_${this.movieData.imdbID}`;
+        document.querySelector(likeButtonSelector).addEventListener('click', this.like.bind(this));
+        
+        if (this.stateManager.showNotes) {
+            // attach an event handler to the save button:
+            const saveButtonSelector = `#save_${this.movieData.imdbID}`;
+            console.log(saveButtonSelector);
+            document.querySelector(saveButtonSelector).addEventListener('click', this.save.bind(this));
+        }
+    
     }
 
     toHTML(data) {
@@ -39,7 +47,8 @@ export default class Movie {
             return `
                 <div>
                     <label>Notes</label>
-                    <textarea>${this.movieData.notes || ''}</textarea>
+                    <textarea id="comment_${this.movieData.imdbID}">${this.movieData.notes || ''}</textarea>
+                    <button id="save_${this.movieData.imdbID}">Save</button>
                 </div>
             `;
         } else {
@@ -52,6 +61,16 @@ export default class Movie {
         // save the movie to the DB
         console.log('Like: add this data to indexedDB!');
         this.stateManager.notify('like-requested', this.movieData);
+    }
+
+    save (ev) {
+        // notifies the state manager that it would like to
+        // save the movie to the DB
+        console.log('Save: add comment to movie!');
+        const notes = document.querySelector(`#comment_${this.movieData.imdbID}`).value;
+        this.movieData.notes = notes;
+        console.log(this.movieData);
+        this.stateManager.notify('save-requested', this.movieData);
     }
 
     saveComment () {
